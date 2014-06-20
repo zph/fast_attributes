@@ -6,21 +6,15 @@ module FastAttributes
       @type_casting ||= {
         'String'   => 'String(%s)',
         'Integer'  => 'Integer(%s)',
+        'Array'    => 'Array(%s)',
         'Date'     => 'Date.parse(%s)',
         'Time'     => 'Time.parse(%s)',
-        'DateTime' => 'DateTime.parse(%s)',
-        'Array'    => 'Array(%s)'
+        'DateTime' => 'DateTime.parse(%s)'
       }
     end
 
-    def default_type_casting
-      '%s'
-    end
-
     def get_type_casting(klass)
-      @type_casting.fetch(type_from_class(klass)) do
-        default_type_casting
-      end
+      @type_casting[type_from_class(klass)]
     end
 
     def add_type_casting(klass, casting)
@@ -41,11 +35,15 @@ module FastAttributes
   end
 
   def attribute(*attributes, klass)
+    unless FastAttributes.type_exists?(klass)
+      raise %(Unsupported attribute type "#{FastAttributes.type_from_class(klass)}")
+    end
+
     @fast_attributes ||= []
     attributes.each do |attribute|
       @fast_attributes << attribute
 
-      type_matching  = FastAttributes.type_exists?(klass) ? "when #{FastAttributes.type_from_class(klass)} then value" : nil
+      type_matching  = "when #{FastAttributes.type_from_class(klass)} then value"
       type_casting   = FastAttributes.get_type_casting(klass) % 'value'
       all_attributes = @fast_attributes.map do |attr|
         "'#{attr}'=>@#{attr}"
