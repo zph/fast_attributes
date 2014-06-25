@@ -1,4 +1,3 @@
-require 'date'
 require 'benchmark/ips'
 require 'fast_attributes'
 require 'virtus'
