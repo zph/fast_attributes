@@ -1,9 +1,9 @@
 # FastAttributes
 [![Gem Version](http://img.shields.io/gem/v/fast_attributes.svg)](http://rubygems.org/gems/fast_attributes)
 [![Build Status](http://img.shields.io/travis/applift/fast_attributes.svg)](https://travis-ci.org/applift/fast_attributes)
+[![Coverage Status](http://img.shields.io/coveralls/applift/fast_attributes.svg)](https://coveralls.io/r/applift/fast_attributes?branch=master)
 
 ## Motivation
-
 There are already a lot of good and flexible gems which solve the similar problem, allow to define attributes with their types, for example: [virtus](https://github.com/solnic/virtus) or [attrio](https://github.com/jetrockets/attrio). But the disadvantage of existing gems is performance. So, the goal of `fast_attributes` is to make a simple solution which is fast, understandable and easy extendable.
 
 This is [performance benchmark](https://github.com/applift/fast_attributes/blob/master/benchmarks/comparison.rb) of `fast_attributes` and other popular gems.
