@@ -1,4 +1,6 @@
 # FastAttributes
+[![Gem Version](http://img.shields.io/gem/v/fast_attributes.svg)](http://rubygems.org/gems/fast_attributes)
+[![Build Status](http://img.shields.io/travis/applift/fast_attributes.svg)](https://travis-ci.org/applift/fast_attributes)
 
 ## Motivation
 
