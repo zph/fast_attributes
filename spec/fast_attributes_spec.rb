@@ -4,12 +4,12 @@ describe FastAttributes do
   describe '.type_casting' do
     it 'returns predefined type casting rules' do
       expect(FastAttributes.type_casting).to eq({
-        'String'   => 'String(%s)',
-        'Integer'  => 'Integer(%s)',
-        'Array'    => 'Array(%s)',
-        'Date'     => 'Date.parse(%s)',
-        'Time'     => 'Time.parse(%s)',
-        'DateTime' => 'DateTime.parse(%s)'
+        String   => 'String(%s)',
+        Integer  => 'Integer(%s)',
+        Array    => 'Array(%s)',
+        Date     => 'Date.parse(%s)',
+        Time     => 'Time.parse(%s)',
+        DateTime => 'DateTime.parse(%s)'
       })
     end
   end
@@ -21,20 +21,20 @@ describe FastAttributes do
     end
   end
 
-  describe '.add_type_casting' do
+  describe '.set_type_casting' do
     after do
       FastAttributes.remove_type_casting(OpenStruct)
     end
 
     it 'adds type to supported type casting list' do
-      FastAttributes.add_type_casting(OpenStruct, 'OpenStruct.new(a: %s)')
+      FastAttributes.set_type_casting(OpenStruct, 'OpenStruct.new(a: %s)')
       expect(FastAttributes.get_type_casting(OpenStruct)).to eq('OpenStruct.new(a: %s)')
     end
   end
 
   describe '.remove_type_casting' do
     before do
-      FastAttributes.add_type_casting(OpenStruct, 'OpenStruct.new(a: %s)')
+      FastAttributes.set_type_casting(OpenStruct, 'OpenStruct.new(a: %s)')
     end
 
     it 'removes type casting function from supported list' do
@@ -50,14 +50,13 @@ describe FastAttributes do
     end
   end
 
-  describe '.type_from_class' do
-    it 'converts class into type name' do
-      expect(FastAttributes.type_from_class(DateTime)).to eq('DateTime')
-      expect(FastAttributes.type_from_class(OpenStruct)).to eq('OpenStruct')
-    end
-  end
-
   describe '#attribute' do
+    it 'raises an exception when type is not supported' do
+      type  = Class.new(Object) { def self.name; 'CustomType' end }
+      klass = Class.new(Object) { extend FastAttributes }
+      expect{klass.attribute(:name, type)}.to raise_error(FastAttributes::UnsupportedTypeError, 'Unsupported attribute type "CustomType"')
+    end
+
     it 'generates getter methods' do
       book = Book.new
       expect(book.respond_to?(:title)).to be(true)
@@ -78,11 +77,6 @@ describe FastAttributes do
       expect(book.respond_to?(:published=)).to be(true)
       expect(book.respond_to?(:sold=)).to be(true)
       expect(book.respond_to?(:finished=)).to be(true)
-    end
-
-    it 'generates attributes method' do
-      book = Book.new
-      expect(book.respond_to?(:attributes)).to be(true)
     end
 
     it 'setter methods convert values to correct datatype' do
@@ -160,39 +154,37 @@ describe FastAttributes do
       expect{ book.sold = 'time' }.to raise_error(ArgumentError)
       expect{ book.finished = 'datetime' }.to raise_error(ArgumentError)
     end
+  end
 
-    it 'attributes method return all attributes with nil values by default' do
-      book = Book.new
-      expect(book.attributes).to eq({
-        'title'     => nil,
-        'name'      => nil,
-        'pages'     => nil,
-        'authors'   => nil,
-        'published' => nil,
-        'sold'      => nil,
-        'finished'  => nil,
-      })
+  describe '#define_attributes' do
+    describe 'option initialize: true' do
+      it 'generates initialize method' do
+        reader = Reader.new(name: 104, age: '23')
+        expect(reader.name).to eq('104')
+        expect(reader.age).to be(23)
+      end
     end
 
-    it 'attributes method return all attributes with their values' do
-      book = Book.new
-      book.title     = 'One'
-      book.name      = 'Two'
-      book.pages     = 250
-      book.authors   = %w[Jobs]
-      book.published = Date.new(2014, 06, 21)
-      book.sold      = Time.new(2014, 6, 21, 20, 45, 15)
-      book.finished  = DateTime.new(2014, 05, 20, 21, 35, 20)
+    describe 'option attributes: true' do
+      it 'generates attributes method' do
+        publisher = Publisher.new
+        expect(publisher.attributes).to eq({'name' => nil, 'books' => nil})
 
-      expect(book.attributes).to eq({
-        'title'     => 'One',
-        'name'      => 'Two',
-        'pages'     => 250,
-        'authors'   => %w[Jobs],
-        'published' => Date.new(2014, 06, 21),
-        'sold'      => Time.new(2014, 6, 21, 20, 45, 15),
-        'finished'  => DateTime.new(2014, 05, 20, 21, 35, 20),
-      })
+        reader = Reader.new
+        expect(reader.attributes).to eq({'name' => nil, 'age' => nil})
+      end
+
+      it 'attributes method return all attributes with their values' do
+        publisher = Publisher.new
+        publisher.name  = 101
+        publisher.books = '20'
+        expect(publisher.attributes).to eq({'name' => '101', 'books' => 20})
+
+        reader = Reader.new
+        reader.name = 102
+        reader.age  = '25'
+        expect(reader.attributes).to eq({'name' => '102', 'age' => 25})
+      end
     end
   end
 end
