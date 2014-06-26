@@ -136,15 +136,15 @@ book = Book.new(
   finished:  '1937-08-20 12:35'
 )
 
-#<Book:0x007f9a0110be20
- @authors=["Tolkien"],
- @finished=
-  #<DateTime: 1937-08-20T12:35:00+00:00 ((2428766j,45300s,0n),+0s,2299161j)>,
- @name="The Hobbit",
- @pages=200,
- @published=#<Date: 1937-09-21 ((2428798j,0s,0n),+0s,2299161j)>,
- @sold=2014-06-25 13:45:00 +0200,
- @title="There and Back Again">
+book.attributes
+{"title"=>"There and Back Again",
+ "name"=>"The Hobbit",
+ "pages"=>200,
+ "authors"=>["Tolkien"],
+ "published"=>#<Date: 1937-09-21 ((2428798j,0s,0n),+0s,2299161j)>,
+ "sold"=>2014-06-25 13:45:00 +0200,
+ "finished"=>
+  #<DateTime: 1937-08-20T12:35:00+00:00 ((2428766j,45300s,0n),+0s,2299161j)>}
 ```
 
 ## Contributing
