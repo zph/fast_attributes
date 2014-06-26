@@ -36,7 +36,7 @@ module FastAttributes
       each_attribute do |attribute, _|
         @klass.class_eval <<-EOS, __FILE__, __LINE__ + 1
           def #{attribute}  # def name
-            @#{attribute}   #  @name
+            @#{attribute}   #   @name
           end               # end
         EOS
       end
