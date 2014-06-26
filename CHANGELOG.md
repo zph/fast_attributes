@@ -1,3 +1,6 @@
+**0.2.1 (June 27, 2014)**
+* Set minimum ruby version to `1.9.2`
+
 **0.2.0 (June 27, 2014)**
 * Add `define_attributes` method which allows to generate `initialize` and `attributes`
 * Raise `FastAttributes::UnsupportedTypeError` error when unknown attribute type is specified
