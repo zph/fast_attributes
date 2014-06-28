@@ -107,10 +107,49 @@ book.attributes
  "finished"=>
   #<DateTime: 1937-08-20T12:35:00+00:00 ((2428766j,45300s,0n),+0s,2299161j)>}
 ```
+## Custom Type
+It's easy to add a custom attribute type.
+```ruby
+FastAttributes.set_type_casting(OpenStruct, 'OpenStruct.new(name: %s)')
+
+class Book
+  extend FastAttributes
+  attribute :author, OpenStruct
+end
+
+book = Book.new
+book.author = 'Rowling'
+book.author
+# => #<OpenStruct name="Rowling">
+```
+
+Notice, that second parameter is a string. It's necessary because this code is compiled into ruby method in runtime. Placeholder `%s` represents a value which this method accepts. 
+
+If you need to refer to a placeholder twice, use a temporary variable.
+```ruby
+Size = Class.new(Array)
+FastAttributes.set_type_casting Size, <<-EOS
+  _value = %s
+  Size[_value, _value]
+EOS
+
+class Square
+  extend FastAttributes
+  attribute :size, Size
+end
+
+square = Square.new
+square.size = 5
+square.size
+# => [5, 5]
+```
+
+## Extensions
+* [fast_attributes-uuid](https://github.com/applift/fast_attributes-uuid) - adds support of `UUID` to `fast_attributes`
 
 ## Contributing
 
-1. Fork it ( http://github.com/<my-github-username>/fast_attributes/fork )
+1. Fork it ( http://github.com/applift/fast_attributes/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
