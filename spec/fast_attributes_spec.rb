@@ -3,24 +3,16 @@ require 'spec_helper'
 describe FastAttributes do
   describe '.type_casting' do
     it 'returns predefined type casting rules' do
-      expect(FastAttributes.type_casting).to eq({
-        String   => 'String(%s)',
-        Integer  => 'Integer(%s)',
-        Float    => 'Float(%s)',
-        Array    => 'Array(%s)',
-        Date     => 'Date.parse(%s)',
-        Time     => 'Time.parse(%s)',
-        DateTime => 'DateTime.parse(%s)'
-      })
+      expect(FastAttributes.type_casting.keys).to match_array([
+        String, Integer, Float, Array, Date, Time, DateTime
+      ])
     end
   end
 
   describe '.get_type_casting' do
-    before { FastAttributes.send(:remove_instance_variable, :@type_casting) }
-
     it 'returns type casting function' do
-      expect(FastAttributes.get_type_casting(String)).to eq('String(%s)')
-      expect(FastAttributes.get_type_casting(Time)).to eq('Time.parse(%s)')
+      expect(FastAttributes.get_type_casting(String)).to be_a(FastAttributes::TypeCast)
+      expect(FastAttributes.get_type_casting(Time)).to be_a(FastAttributes::TypeCast)
     end
   end
 
@@ -30,8 +22,9 @@ describe FastAttributes do
     end
 
     it 'adds type to supported type casting list' do
+      expect(FastAttributes.get_type_casting(OpenStruct)).to be(nil)
       FastAttributes.set_type_casting(OpenStruct, 'OpenStruct.new(a: %s)')
-      expect(FastAttributes.get_type_casting(OpenStruct)).to eq('OpenStruct.new(a: %s)')
+      expect(FastAttributes.get_type_casting(OpenStruct)).to be_a(FastAttributes::TypeCast)
     end
   end
 

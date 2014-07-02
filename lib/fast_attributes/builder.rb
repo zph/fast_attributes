@@ -47,17 +47,10 @@ module FastAttributes
 
     def compile_setter
       each_attribute do |attribute, type|
-        type_matching  = "when #{type.name} then value"
-        type_casting   = FastAttributes.get_type_casting(type) % 'value'
-
+        type_cast = FastAttributes.get_type_casting(type)
         @methods.module_eval <<-EOS, __FILE__, __LINE__ + 1
-          def #{attribute}=(value)              # def name=(value)
-            @#{attribute} = case value          #   @name = case value
-                            when nil then nil   #           when nil    then nil
-                              #{type_matching}  #           when String then value
-                            else                #           else
-                              #{type_casting}   #             String(value)
-                            end                 #           end
+          def #{attribute}=(value)
+            @#{attribute} = #{type_cast.template.gsub('%s', 'value')}
           end
         EOS
       end
