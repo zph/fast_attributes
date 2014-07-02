@@ -15,7 +15,7 @@ module FastAttributes
     end
 
     def get_type_casting(klass)
-      @type_casting[klass]
+      type_casting[klass]
     end
 
     def set_type_casting(klass, casting)
