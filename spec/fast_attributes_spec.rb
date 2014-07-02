@@ -15,7 +15,7 @@ describe FastAttributes do
   end
 
   describe '.get_type_casting' do
-    before { FastAttributes.remove_instance_variable(:@type_casting) }
+    before { FastAttributes.send(:remove_instance_variable, :@type_casting) }
 
     it 'returns type casting function' do
       expect(FastAttributes.get_type_casting(String)).to eq('String(%s)')
