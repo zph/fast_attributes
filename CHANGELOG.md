@@ -1,3 +1,6 @@
+**0.2.2 (July 2, 2014)**
+* Fix uninitialized `@type_casting` variable
+
 **0.2.1 (June 27, 2014)**
 * Set minimum ruby version to `1.9.2`
 
