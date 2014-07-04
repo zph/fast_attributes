@@ -5,26 +5,24 @@ require 'attrio'
 
 ATTR_NAMES = [:attr0, :attr1, :attr2, :attr3, :attr4, :attr5, :attr6, :attr7, :attr8, :attr9]
 
-module Initializer
-  def initialize(attributes = {})
-    attributes.each do |attribute, value|
-      public_send("#{attribute}=", value)
-    end
-  end
-end
-
 class FastIntegers
   extend  FastAttributes
-  include Initializer
-  attribute *ATTR_NAMES, Integer
+  define_attributes initialize: true do
+    attribute *ATTR_NAMES, Integer
+  end
 end
 
 class AttrioIntegers
   include Attrio
-  include Initializer
   define_attributes do
     ATTR_NAMES.each do |name|
       attr name, Integer
+    end
+  end
+
+  def initialize(attributes = {})
+    attributes.each do |attribute, value|
+      public_send("#{attribute}=", value)
     end
   end
 end
