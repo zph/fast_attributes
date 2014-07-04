@@ -98,7 +98,7 @@ describe FastAttributes do
       expect(book.title).to eq('123')
       expect(book.name).to eq('456')
       expect(book.pages).to be(250)
-      expect(book.price).to be(2.55)
+      expect(book.price).to eq(2.55)
       expect(book.authors).to eq(%w[Jobs])
       expect(book.published).to eq(Date.new(2014, 6, 21))
       expect(book.sold).to eq(Time.new(2014, 6, 21, 20, 45, 15))
