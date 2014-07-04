@@ -1,3 +1,6 @@
+**0.3.0 (July 4, 2014)**
+* Support `Float` data type
+
 **0.2.2 (July 2, 2014)**
 * Fix uninitialized `@type_casting` variable
 
