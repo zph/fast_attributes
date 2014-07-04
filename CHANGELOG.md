@@ -1,3 +1,6 @@
+**0.4.0 (July 5, 2014)**
+* Allow to override generated methods
+
 **0.3.0 (July 4, 2014)**
 * Support `Float` data type
 
