@@ -119,7 +119,7 @@ describe FastAttributes do
       expect(book.title).to be(title)
       expect(book.name).to be(name)
       expect(book.pages).to be(pages)
-      expect(book.price).to be(price)
+      expect(book.price).to eq(price)
       expect(book.authors).to be(authors)
       expect(book.published).to be(published)
       expect(book.sold).to be(sold)
