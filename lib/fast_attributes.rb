@@ -7,6 +7,7 @@ module FastAttributes
       @type_casting ||= {
         String   => 'String(%s)',
         Integer  => 'Integer(%s)',
+        Float    => 'Float(%s)',
         Array    => 'Array(%s)',
         Date     => 'Date.parse(%s)',
         Time     => 'Time.parse(%s)',

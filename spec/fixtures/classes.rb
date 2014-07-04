@@ -3,6 +3,7 @@ class Book
 
   attribute :title, :name, String
   attribute :pages,        Integer
+  attribute :price,        Float
   attribute :authors,      Array
   attribute :published,    Date
   attribute :sold,         Time
