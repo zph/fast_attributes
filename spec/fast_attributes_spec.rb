@@ -72,6 +72,13 @@ describe FastAttributes do
       expect(book.respond_to?(:finished)).to be(true)
     end
 
+    it 'is possible to override getter method' do
+      toy = Toy.new
+      expect(toy.name).to eq(' toy!')
+      toy.name = 'bear'
+      expect(toy.name).to eq('bear toy!')
+    end
+
     it 'generates setter methods' do
       book = Book.new
       expect(book.respond_to?(:title=)).to be(true)
@@ -82,6 +89,13 @@ describe FastAttributes do
       expect(book.respond_to?(:published=)).to be(true)
       expect(book.respond_to?(:sold=)).to be(true)
       expect(book.respond_to?(:finished=)).to be(true)
+    end
+
+    it 'is possible to override setter method' do
+      toy = Toy.new
+      expect(toy.price).to be(nil)
+      toy.price = 2
+      expect(toy.price).to eq(4)
     end
 
     it 'setter methods convert values to correct datatype' do
@@ -176,6 +190,16 @@ describe FastAttributes do
         expect(reader.name).to eq('104')
         expect(reader.age).to be(23)
       end
+
+      it 'is possible to override initialize method' do
+        window = Window.new
+        expect(window.height).to be(200)
+        expect(window.width).to be(80)
+
+        window = Window.new(height: 210, width: 100)
+        expect(window.height).to be(210)
+        expect(window.width).to be(100)
+      end
     end
 
     describe 'option attributes: true' do
@@ -185,6 +209,11 @@ describe FastAttributes do
 
         reader = Reader.new
         expect(reader.attributes).to eq({'name' => nil, 'age' => nil})
+      end
+
+      it 'is possible to override attributes method' do
+        window = Window.new(height: 220, width: 100)
+        expect(window.attributes).to eq({'height' => 220, 'width' => 100, 'color' => 'white'})
       end
 
       it 'attributes method return all attributes with their values' do

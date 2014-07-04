@@ -7,6 +7,7 @@ module FastAttributes
       @klass      = klass
       @options    = options
       @attributes = []
+      @methods    = Module.new
     end
 
     def attribute(*attributes, type)
@@ -18,23 +19,25 @@ module FastAttributes
     end
 
     def compile!
-      compile_getter!
-      compile_setter!
+      compile_getter
+      compile_setter
 
       if @options[:initialize]
-        compile_initialize!
+        compile_initialize
       end
 
       if @options[:attributes]
-        compile_attributes!
+        compile_attributes
       end
+
+      include_methods
     end
 
     private
 
-    def compile_getter!
+    def compile_getter
       each_attribute do |attribute, _|
-        @klass.class_eval <<-EOS, __FILE__, __LINE__ + 1
+        @methods.module_eval <<-EOS, __FILE__, __LINE__ + 1
           def #{attribute}  # def name
             @#{attribute}   #   @name
           end               # end
@@ -42,12 +45,12 @@ module FastAttributes
       end
     end
 
-    def compile_setter!
+    def compile_setter
       each_attribute do |attribute, type|
         type_matching  = "when #{type.name} then value"
         type_casting   = FastAttributes.get_type_casting(type) % 'value'
 
-        @klass.class_eval <<-EOS, __FILE__, __LINE__ + 1
+        @methods.module_eval <<-EOS, __FILE__, __LINE__ + 1
           def #{attribute}=(value)              # def name=(value)
             @#{attribute} = case value          #   @name = case value
                             when nil then nil   #           when nil    then nil
@@ -60,8 +63,8 @@ module FastAttributes
       end
     end
 
-    def compile_initialize!
-      @klass.class_eval <<-EOS, __FILE__, __LINE__ + 1
+    def compile_initialize
+      @methods.module_eval <<-EOS, __FILE__, __LINE__ + 1
         def initialize(attributes = {})
           attributes.each do |name, value|
             public_send("\#{name}=", value)
@@ -70,17 +73,26 @@ module FastAttributes
       EOS
     end
 
-    def compile_attributes!
+    def compile_attributes
       attributes = @attributes.flat_map(&:first)
       attributes = attributes.map do |attribute|
         "'#{attribute}' => @#{attribute}"
       end
 
-      @klass.class_eval <<-EOS, __FILE__, __LINE__ + 1
+      @methods.module_eval <<-EOS, __FILE__, __LINE__ + 1
         def attributes                # def attributes
           {#{attributes.join(', ')}}  #   {'name' => @name, ...}
         end                           # end
       EOS
+    end
+
+    def include_methods
+      @methods.instance_eval <<-EOS, __FILE__, __LINE__ + 1
+        def inspect
+          'FastAttributes(#{@attributes.flat_map(&:first).join(', ')})'
+        end
+      EOS
+      @klass.send(:include, @methods)
     end
 
     def each_attribute

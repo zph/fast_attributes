@@ -36,3 +36,38 @@ class Reader
     attribute :age,  Integer
   end
 end
+
+class Toy
+  extend FastAttributes
+
+  attribute :name,  String
+  attribute :price, Float
+
+  def name
+    "#{super} toy!"
+  end
+
+  def price=(value)
+    super((value.to_f + 2).to_s)
+  end
+end
+
+class Window
+  extend FastAttributes
+
+  define_attributes initialize: true, attributes: true do
+    attribute :height, Integer
+    attribute :width,  Integer
+  end
+
+  def initialize(attributes = {})
+    self.height = 200
+    self.width  = 80
+
+    super(attributes)
+  end
+
+  def attributes
+    super.merge('color' => 'white')
+  end
+end
