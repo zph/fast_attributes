@@ -6,9 +6,9 @@
 [![Dependency Status](http://img.shields.io/gemnasium/applift/fast_attributes.svg)](https://gemnasium.com/applift/fast_attributes)
 
 ## Motivation
-There are already a lot of good and flexible gems which solve the similar problem, allow to define attributes with their types, for example: [virtus](https://github.com/solnic/virtus) or [attrio](https://github.com/jetrockets/attrio). But the disadvantage of existing gems is performance. So, the goal of `fast_attributes` is to make a simple solution which is fast, understandable and easy extendable.
+There are already a lot of good and flexible gems which solve a similar problem, allowing attributes to be defined with their types, for example: [virtus](https://github.com/solnic/virtus) or [attrio](https://github.com/jetrockets/attrio). However, the disadvantage of these gems is performance. So, the goal of `fast_attributes` is to provide a simple solution which is fast, understandable and extendable.
 
-This is [performance benchmark](https://github.com/applift/fast_attributes/blob/master/benchmarks/comparison.rb) of `fast_attributes` and other popular gems.
+This is the [performance benchmark](https://github.com/applift/fast_attributes/blob/master/benchmarks/comparison.rb) of `fast_attributes` compared to other popular gems.
 
 ```
 Comparison:
@@ -123,7 +123,7 @@ book.author
 # => #<OpenStruct name="Rowling">
 ```
 
-Notice, that second parameter is a string. It's necessary because this code is compiled into ruby method in runtime. Placeholder `%s` represents a value which this method accepts. 
+Notice, that second parameter is a string. It's necessary because this code is compiled into a ruby method in runtime. The placeholder `%s` represents a value which this method accepts. 
 
 If you need to refer to a placeholder twice, use a temporary variable.
 ```ruby
