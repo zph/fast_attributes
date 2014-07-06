@@ -3,11 +3,12 @@ class Book
 
   attribute :title, :name, String
   attribute :pages,        Integer
-  attribute :price,        Float
+  attribute :price,        BigDecimal
   attribute :authors,      Array
   attribute :published,    Date
   attribute :sold,         Time
   attribute :finished,     DateTime
+  attribute :rate,         Float
 end
 
 class Author
