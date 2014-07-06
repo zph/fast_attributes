@@ -1,3 +1,29 @@
+**0.5.0 (...)***
+* Allow to control any switch statements during typecasting usign new DSL.
+
+The default typecasting rule which `fast_attributes` generates for `String` is:
+```ruby
+   case value
+   when nil    then nil
+   when String then value
+   else String(%s)
+   end
+```
+Method `FastAttributes.set_type_casting` allows only to change `else` condition.
+```ruby
+FastAttributes.set_type_casting(String, 'String("#{%s}-suffix")')
+```
+
+Using `FastAttributes.type_cast` method it's possible to define custom `switch` condition
+```ruby
+FastAttributes.type_cast String do   # case value
+  from 'nil', 	 to: 'nil'           # when nil    then nil
+  from 'String', to: '%s'            # when String then value
+  from Array,    to: 'raise "Error"' # when Array  then raise "Error"
+  otherwise 'String(%s)'             # else String(value)
+end                                  # end
+```
+
 **0.4.0 (July 5, 2014)**
 * Allow to override generated methods
 
