@@ -71,3 +71,15 @@ class Window
     super.merge('color' => 'white')
   end
 end
+
+class Placeholder < String
+end
+
+FastAttributes.type_cast Placeholder do
+  otherwise '"%s %%s %%%s %%%%s #{5%%%s}"'
+end
+
+class PlaceholderClass
+  extend FastAttributes
+  attribute :value, Placeholder
+end

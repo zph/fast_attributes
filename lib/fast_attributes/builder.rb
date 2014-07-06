@@ -48,9 +48,11 @@ module FastAttributes
     def compile_setter
       each_attribute do |attribute, type|
         type_cast = FastAttributes.get_type_casting(type)
+        template  = escape_template(type_cast.template, 'value')
+
         @methods.module_eval <<-EOS, __FILE__, __LINE__ + 1
           def #{attribute}=(value)
-            @#{attribute} = #{type_cast.template.gsub('%s', 'value')}
+            @#{attribute} = #{template}
           end
         EOS
       end
@@ -93,6 +95,20 @@ module FastAttributes
         attributes.each do |attribute|
           yield attribute, type
         end
+      end
+    end
+
+    private
+
+    def escape_template(template, argument_name)
+      template.gsub(/%+s/) do |match|
+        match.each_char.each_slice(2).map do |placeholder|
+          case placeholder
+          when %w[% s] then argument_name
+          when %w[% %] then '%'
+          else placeholder.join
+          end
+        end.join
       end
     end
   end

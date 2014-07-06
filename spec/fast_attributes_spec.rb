@@ -3,9 +3,13 @@ require 'spec_helper'
 describe FastAttributes do
   describe '.type_casting' do
     it 'returns predefined type casting rules' do
-      expect(FastAttributes.type_casting.keys).to match_array([
-        String, Integer, Float, Array, Date, Time, DateTime
-      ])
+      expect(FastAttributes.type_casting.keys).to include(String)
+      expect(FastAttributes.type_casting.keys).to include(Integer)
+      expect(FastAttributes.type_casting.keys).to include(Float)
+      expect(FastAttributes.type_casting.keys).to include(Array)
+      expect(FastAttributes.type_casting.keys).to include(Date)
+      expect(FastAttributes.type_casting.keys).to include(Time)
+      expect(FastAttributes.type_casting.keys).to include(DateTime)
     end
   end
 
@@ -173,6 +177,12 @@ describe FastAttributes do
       expect{ book.published = 'date' }.to raise_error(ArgumentError)
       expect{ book.sold = 'time' }.to raise_error(ArgumentError)
       expect{ book.finished = 'datetime' }.to raise_error(ArgumentError)
+    end
+
+    it 'setter method can escape placeholder using double %' do
+      placeholder = PlaceholderClass.new
+      placeholder.value = 3
+      expect(placeholder.value).to eq('value %s %value %%s 2')
     end
   end
 
