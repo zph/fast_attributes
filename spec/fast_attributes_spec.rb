@@ -10,6 +10,7 @@ describe FastAttributes do
       expect(FastAttributes.type_casting.keys).to include(Date)
       expect(FastAttributes.type_casting.keys).to include(Time)
       expect(FastAttributes.type_casting.keys).to include(DateTime)
+      expect(FastAttributes.type_casting.keys).to include(BigDecimal)
     end
   end
 
@@ -67,6 +68,7 @@ describe FastAttributes do
       expect(book.respond_to?(:published)).to be(true)
       expect(book.respond_to?(:sold)).to be(true)
       expect(book.respond_to?(:finished)).to be(true)
+      expect(book.respond_to?(:rate)).to be(true)
     end
 
     it 'is possible to override getter method' do
@@ -86,6 +88,7 @@ describe FastAttributes do
       expect(book.respond_to?(:published=)).to be(true)
       expect(book.respond_to?(:sold=)).to be(true)
       expect(book.respond_to?(:finished=)).to be(true)
+      expect(book.respond_to?(:rate=)).to be(true)
     end
 
     it 'is possible to override setter method' do
@@ -105,15 +108,17 @@ describe FastAttributes do
       book.published = '2014-06-21'
       book.sold      = '2014-06-21 20:45:15'
       book.finished  = '2014-05-20 21:35:20'
+      book.rate      = '4.1'
 
       expect(book.title).to eq('123')
       expect(book.name).to eq('456')
       expect(book.pages).to be(250)
-      expect(book.price).to eq(2.55)
+      expect(book.price).to eq(BigDecimal.new("2.55"))
       expect(book.authors).to eq(%w[Jobs])
       expect(book.published).to eq(Date.new(2014, 6, 21))
       expect(book.sold).to eq(Time.new(2014, 6, 21, 20, 45, 15))
       expect(book.finished).to eq(DateTime.new(2014, 5, 20, 21, 35, 20))
+      expect(book.rate).to eq(4.1)
     end
 
     it 'setter methods accept values which are already in a proper type' do
@@ -121,11 +126,12 @@ describe FastAttributes do
       book.title     = title     = 'One'
       book.name      = name      = 'Two'
       book.pages     = pages     = 250
-      book.price     = price     = 2.55
+      book.price     = price     = BigDecimal.new("2.55")
       book.authors   = authors   = %w[Jobs]
       book.published = published = Date.new(2014, 06, 21)
       book.sold      = sold      = Time.new(2014, 6, 21, 20, 45, 15)
       book.finished  = finished  = DateTime.new(2014, 05, 20, 21, 35, 20)
+      book.rate      = rate      = 4.1
 
       expect(book.title).to be(title)
       expect(book.name).to be(name)
@@ -135,6 +141,7 @@ describe FastAttributes do
       expect(book.published).to be(published)
       expect(book.sold).to be(sold)
       expect(book.finished).to be(finished)
+      expect(book.rate).to be(rate)
     end
 
     it 'setter methods accept nil values' do
@@ -142,11 +149,12 @@ describe FastAttributes do
       book.title     = 'One'
       book.name      = 'Two'
       book.pages     = 250
-      book.price     = 2.55
+      book.price     = BigDecimal.new("2.55")
       book.authors   = %w[Jobs]
       book.published = Date.new(2014, 06, 21)
       book.sold      = Time.new(2014, 6, 21, 20, 45, 15)
       book.finished  = DateTime.new(2014, 05, 20, 21, 35, 20)
+      book.rate      = 4.1
 
       book.title     = nil
       book.name      = nil
@@ -156,6 +164,7 @@ describe FastAttributes do
       book.published = nil
       book.sold      = nil
       book.finished  = nil
+      book.rate      = nil
 
       expect(book.title).to be(nil)
       expect(book.name).to be(nil)
@@ -165,6 +174,7 @@ describe FastAttributes do
       expect(book.published).to be(nil)
       expect(book.sold).to be(nil)
       expect(book.finished).to be(nil)
+      expect(book.rate).to be(nil)
     end
 
     it 'setter methods raise an exception when cannot parse values' do
@@ -173,10 +183,11 @@ describe FastAttributes do
       expect{ book.title = BasicObject.new }.to raise_error(TypeError)
       expect{ book.name = BasicObject.new }.to raise_error(TypeError)
       expect{ book.pages = 'number' }.to raise_error(ArgumentError)
-      expect{ book.price = 'price' }.to raise_error(ArgumentError)
+      expect{ book.price = 'bigdecimal' }.to raise_error(ArgumentError)
       expect{ book.published = 'date' }.to raise_error(ArgumentError)
       expect{ book.sold = 'time' }.to raise_error(ArgumentError)
       expect{ book.finished = 'datetime' }.to raise_error(ArgumentError)
+      expect{ book.rate = 'float' }.to raise_error(ArgumentError)
     end
 
     it 'setter method can escape placeholder using double %' do

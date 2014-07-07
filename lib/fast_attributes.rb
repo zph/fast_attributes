@@ -1,3 +1,4 @@
+require 'bigdecimal'
 require 'date'
 require 'time'
 require 'fast_attributes/version'
@@ -49,11 +50,12 @@ module FastAttributes
     builder.compile!
   end
 
-  set_type_casting String,   'String(%s)'
-  set_type_casting Integer,  'Integer(%s)'
-  set_type_casting Float,    'Float(%s)'
-  set_type_casting Array,    'Array(%s)'
-  set_type_casting Date,     'Date.parse(%s)'
-  set_type_casting Time,     'Time.parse(%s)'
-  set_type_casting DateTime, 'DateTime.parse(%s)'
+  set_type_casting String,     'String(%s)'
+  set_type_casting Integer,    'Integer(%s)'
+  set_type_casting Float,      'Float(%s)'
+  set_type_casting Array,      'Array(%s)'
+  set_type_casting Date,       'Date.parse(%s)'
+  set_type_casting Time,       'Time.parse(%s)'
+  set_type_casting DateTime,   'DateTime.parse(%s)'
+  set_type_casting BigDecimal, 'Float(%s);BigDecimal(%s)'
 end

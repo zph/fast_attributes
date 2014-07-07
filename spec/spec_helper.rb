@@ -12,6 +12,7 @@ end
 
 require 'fast_attributes'
 require 'ostruct'
+require 'bigdecimal'
 require 'date'
 require 'time'
 require 'fixtures/classes'
