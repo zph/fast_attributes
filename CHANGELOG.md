@@ -24,6 +24,8 @@ FastAttributes.type_cast String do   # case value
 end                                  # end
 ```
 
+* Add support to BigDecimal [Filipe Costa](https://github.com/applift/fast_attributes/pull/2)
+
 **0.4.0 (July 5, 2014)**
 * Allow to override generated methods
 
