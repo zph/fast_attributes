@@ -125,12 +125,11 @@ book.author
 
 Notice, that second parameter is a string. It's necessary because this code is compiled into a ruby method in runtime. The placeholder `%s` represents a value which this method accepts. 
 
-If you need to refer to a placeholder twice, use a temporary variable.
+It's possible to refer to a placeholder several times.
 ```ruby
 Size = Class.new(Array)
 FastAttributes.set_type_casting Size, <<-EOS
-  _value = %s
-  Size[_value, _value]
+  Size[%s, %s]
 EOS
 
 class Square
