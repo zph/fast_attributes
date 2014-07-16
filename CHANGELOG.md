@@ -1,4 +1,4 @@
-**0.5.0 (July 16, 201)**
+**0.5.0 (July 16, 2014)**
 * Allow to control any switch statements during typecasting using new DSL.
 
 The default typecasting rule which `fast_attributes` generates for `String` is:
