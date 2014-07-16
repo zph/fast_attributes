@@ -57,5 +57,5 @@ module FastAttributes
   set_type_casting Date,       'Date.parse(%s)'
   set_type_casting Time,       'Time.parse(%s)'
   set_type_casting DateTime,   'DateTime.parse(%s)'
-  set_type_casting BigDecimal, 'Float(%s);BigDecimal(%s)'
+  set_type_casting BigDecimal, 'Float(%s);BigDecimal(%s.to_s)'
 end
