@@ -143,6 +143,25 @@ square.size
 # => [5, 5]
 ```
 
+Method `FastAttributes.set_type_casting` generates the following code:
+```ruby
+FastAttributes.set_type_casting String, 'String(%s)'
+# case %s
+# when nil    then nil
+# when String then %s
+# else String(%s)
+# end
+```
+
+If you need to conrol the whole type casting process, you can use the following DSL:
+```ruby
+FastAttributes.type_cast String do  # case String
+  from 'nil',    to: 'nil'          # when nil    then nil
+  from 'String', to: '%s'           # when String then %s
+  otherwise 'String(%s)'            # else String(%s) 
+end                                 # end
+```
+
 ## Extensions
 * [fast_attributes-uuid](https://github.com/applift/fast_attributes-uuid) - adds support of `UUID` to `fast_attributes`
 
