@@ -2,7 +2,7 @@
 * Throw proper exception when type casting function is not defined
 
 **0.5.1 (July 16, 2014)**
-* Fix `BigDecimal` type casting. It threw an exception when input value was `Integer` or `Float`  
+* Fix `BigDecimal` type casting. It threw an exception when input value was `Float`  
 
 **0.5.0 (July 16, 2014)**
 * Allow to control any switch statements during typecasting using new DSL.
