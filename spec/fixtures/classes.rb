@@ -77,10 +77,13 @@ class Placeholder < String
 end
 
 FastAttributes.type_cast Placeholder do
+  from '"attribute name 1"', to: '"%a"'
+  from '"attribute name 2"', to: %q("%a%%a%%%a%#{%a<<'!'}")
   otherwise '"%s %%s %%%s %%%%s #{5%%%s}"'
 end
 
 class PlaceholderClass
   extend FastAttributes
   attribute :value, Placeholder
+  attribute :title, Placeholder
 end

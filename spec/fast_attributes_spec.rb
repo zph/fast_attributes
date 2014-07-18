@@ -178,22 +178,35 @@ describe FastAttributes do
     end
 
     it 'setter methods raise an exception when cannot parse values' do
-      book = Book.new
+      object = BasicObject.new
+      def object.to_s; 'BasicObject'; end
+      def object.to_str; 1/0 end
 
-      expect{ book.title = BasicObject.new }.to raise_error(TypeError)
-      expect{ book.name = BasicObject.new }.to raise_error(TypeError)
-      expect{ book.pages = 'number' }.to raise_error(ArgumentError)
-      expect{ book.price = 'bigdecimal' }.to raise_error(ArgumentError)
-      expect{ book.published = 'date' }.to raise_error(ArgumentError)
-      expect{ book.sold = 'time' }.to raise_error(ArgumentError)
-      expect{ book.finished = 'datetime' }.to raise_error(ArgumentError)
-      expect{ book.rate = 'float' }.to raise_error(ArgumentError)
+      book = Book.new
+      expect{ book.title = object }.to raise_error(FastAttributes::TypeCast::InvalidValueError, 'Invalid value "BasicObject" for attribute "title" of type "String"')
+      expect{ book.name = object }.to raise_error(FastAttributes::TypeCast::InvalidValueError,  'Invalid value "BasicObject" for attribute "name" of type "String"')
+      expect{ book.pages = 'number' }.to raise_error(FastAttributes::TypeCast::InvalidValueError, 'Invalid value "number" for attribute "pages" of type "Integer"')
+      expect{ book.price = 'bigdecimal' }.to raise_error(FastAttributes::TypeCast::InvalidValueError, 'Invalid value "bigdecimal" for attribute "price" of type "BigDecimal"')
+      expect{ book.published = 'date' }.to raise_error(FastAttributes::TypeCast::InvalidValueError, 'Invalid value "date" for attribute "published" of type "Date"')
+      expect{ book.sold = 'time' }.to raise_error(FastAttributes::TypeCast::InvalidValueError, 'Invalid value "time" for attribute "sold" of type "Time"')
+      expect{ book.finished = 'datetime' }.to raise_error(FastAttributes::TypeCast::InvalidValueError, 'Invalid value "datetime" for attribute "finished" of type "DateTime"')
+      expect{ book.rate = 'float' }.to raise_error(FastAttributes::TypeCast::InvalidValueError, 'Invalid value "float" for attribute "rate" of type "Float"')
     end
 
     it 'setter method can escape placeholder using double %' do
       placeholder = PlaceholderClass.new
       placeholder.value = 3
       expect(placeholder.value).to eq('value %s %value %%s 2')
+    end
+
+    it 'setter method can accept %a placeholder which return attribute name' do
+      placeholder = PlaceholderClass.new
+
+      placeholder.title = 'attribute name 1'
+      expect(placeholder.title).to eq('title')
+
+      placeholder.title = 'attribute name 2'
+      expect(placeholder.title).to eq('title%a%title%title!')
     end
   end
 

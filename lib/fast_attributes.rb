@@ -32,7 +32,7 @@ module FastAttributes
     end
 
     def type_cast(klass, &block)
-      type_cast = TypeCast.new
+      type_cast = TypeCast.new(klass)
       type_cast.instance_eval(&block)
       type_casting[klass] = type_cast
     end

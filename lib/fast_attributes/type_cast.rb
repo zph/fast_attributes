@@ -3,9 +3,30 @@ module FastAttributes
     class UnknownTypeCastingError < StandardError
     end
 
-    def initialize
-      @if_conditions  = []
-      @else_condition = %q(raise FastAttributes::TypeCast::UnknownTypeCastingError, 'Type casting is not defined')
+    class InvalidValueError < TypeError
+    end
+
+    def initialize(type)
+      @type              = type
+      @if_conditions     = []
+      @else_condition    = %q(raise FastAttributes::TypeCast::UnknownTypeCastingError, 'Type casting is not defined')
+      @rescue_conditions = nil
+      @default_rescue    = %(raise FastAttributes::TypeCast::InvalidValueError, %(Invalid value "\#{%s}" for attribute "%a" of type "#{@type}"))
+    end
+
+    class << self
+      def escape_template(template, attribute_name, argument_name)
+        template.gsub(/%+a|%+s/) do |match|
+          match.each_char.each_slice(2).map do |placeholder|
+            case placeholder
+              when %w[% a] then attribute_name
+              when %w[% s] then argument_name
+              when %w[% %] then '%'
+              else placeholder.join
+            end
+          end.join
+        end
+      end
     end
 
     def from(condition, options = {})
@@ -14,6 +35,11 @@ module FastAttributes
 
     def otherwise(else_condition)
       @else_condition = else_condition
+    end
+
+    def on_error(error, options = {})
+      @rescue_conditions ||=[]
+      @rescue_conditions << [error, options[:act]]
     end
 
     def template
@@ -33,6 +59,23 @@ module FastAttributes
           @else_condition
         end
       end
+    end
+
+    def rescue_template
+      rescues = @rescue_conditions || [['', @default_rescue]]
+      rescues.map do |error, action|
+        "rescue #{error} => e\n" +
+        "  #{action}"
+      end.join("\n")
+    end
+
+    def compile_method_body(attribute_name, argument_name)
+      method_body = "begin\n" +
+                    "  #{template}\n" +
+                    "#{rescue_template}\n" +
+                    "end"
+
+      self.class.escape_template(method_body, attribute_name, argument_name)
     end
   end
 end
