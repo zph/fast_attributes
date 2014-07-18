@@ -7,7 +7,7 @@ describe FastAttributes::TypeCast do
     describe 'without any conditions' do
       it 'return exception' do
         expect(type_cast.template.gsub(' ', '')).to eq <<-EOS.gsub(' ', '').chomp
-          raise UnknownTypeCastingError, 'Type casting is not defined'
+          raise FastAttributes::TypeCast::UnknownTypeCastingError, 'Type casting is not defined'
         EOS
       end
     end
@@ -23,7 +23,7 @@ describe FastAttributes::TypeCast do
           when nil
             nil
           else
-            raise UnknownTypeCastingError, 'Type casting is not defined'
+            raise FastAttributes::TypeCast::UnknownTypeCastingError, 'Type casting is not defined'
           end
         EOS
       end
@@ -46,7 +46,7 @@ describe FastAttributes::TypeCast do
           when Integer
             Integer(%s)
           else
-            raise UnknownTypeCastingError, 'Type casting is not defined'
+            raise FastAttributes::TypeCast::UnknownTypeCastingError, 'Type casting is not defined'
           end
         EOS
       end

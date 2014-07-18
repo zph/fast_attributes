@@ -5,7 +5,7 @@ module FastAttributes
 
     def initialize
       @if_conditions  = []
-      @else_condition = %q(raise UnknownTypeCastingError, 'Type casting is not defined')
+      @else_condition = %q(raise FastAttributes::TypeCast::UnknownTypeCastingError, 'Type casting is not defined')
     end
 
     def from(condition, options = {})
