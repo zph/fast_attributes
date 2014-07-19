@@ -9,12 +9,12 @@ describe FastAttributes::TypeCast do
     end
   end
 
-  describe '#template' do
+  describe '#type_casting_template' do
     let(:type_cast) { FastAttributes::TypeCast.new(String) }
 
     describe 'without any conditions' do
       it 'return exception' do
-        expect(type_cast.template.gsub(' ', '')).to eq <<-EOS.gsub(' ', '').chomp
+        expect(type_cast.type_casting_template.gsub(' ', '')).to eq <<-EOS.gsub(' ', '').chomp
           raise FastAttributes::TypeCast::UnknownTypeCastingError, 'Type casting is not defined'
         EOS
       end
@@ -26,7 +26,7 @@ describe FastAttributes::TypeCast do
       end
 
       it 'returns one when statement' do
-        expect(type_cast.template.gsub(' ', '')).to eq <<-EOS.gsub(' ', '').chomp
+        expect(type_cast.type_casting_template.gsub(' ', '')).to eq <<-EOS.gsub(' ', '').chomp
           case %s
           when nil
             nil
@@ -45,7 +45,7 @@ describe FastAttributes::TypeCast do
       end
 
       it 'returns three when statements' do
-        expect(type_cast.template.gsub(' ', '')).to eq <<-EOS.gsub(' ', '').chomp
+        expect(type_cast.type_casting_template.gsub(' ', '')).to eq <<-EOS.gsub(' ', '').chomp
           case %s
           when String
             String(%s)
@@ -68,7 +68,7 @@ describe FastAttributes::TypeCast do
       end
 
       it 'returns 2 when statements and overrides default else condition' do
-        expect(type_cast.template.gsub(' ', '')).to eq <<-EOS.gsub(' ', '').chomp
+        expect(type_cast.type_casting_template.gsub(' ', '')).to eq <<-EOS.gsub(' ', '').chomp
           case %s
           when Date
             Date.parse(%s)
@@ -87,7 +87,7 @@ describe FastAttributes::TypeCast do
       end
 
       it 'returns otherwise statement only' do
-        expect(type_cast.template.gsub(' ', '')).to eq <<-EOS.gsub(' ', '').chomp
+        expect(type_cast.type_casting_template.gsub(' ', '')).to eq <<-EOS.gsub(' ', '').chomp
           42 * %s
         EOS
       end

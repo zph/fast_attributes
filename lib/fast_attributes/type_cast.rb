@@ -42,8 +42,8 @@ module FastAttributes
       @rescue_conditions << [error, options[:act]]
     end
 
-    def template
-      @template ||= begin
+    def type_casting_template
+      @type_casting_template ||= begin
         if @if_conditions.any?
           conditions = @if_conditions.map do |from, to|
             "when #{from}\n" +
@@ -71,7 +71,7 @@ module FastAttributes
 
     def compile_method_body(attribute_name, argument_name)
       method_body = "begin\n" +
-                    "  #{template}\n" +
+                    "  #{type_casting_template}\n" +
                     "#{rescue_template}\n" +
                     "end"
 
