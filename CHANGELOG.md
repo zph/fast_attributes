@@ -1,3 +1,49 @@
+**0.6.0 (...)**
+* Throw custom `FastAttributes::TypeCast::InvalidValueError` exception when value has invalid type.
+How auto-generated method looks like:
+```ruby
+FastAttributes.set_type_casting(String, 'String(%s)')
+# def name=(value)
+#   @name = begin
+#     case value
+#     when nil    then nil
+#     when String then value
+#     else String(value)
+#     end
+#   rescue => e
+#     raise FastAttributes::TypeCast::InvalidValueError, %(Invalid value "#{value}" for attribute "name" of type "String")
+#   end
+# end
+```
+
+* Add `on_error` method to override default rescue block:
+```ruby
+FastAttributes.type_cast String do
+  from 'nil', 	 to: 'nil'
+  from 'String', to: '%s'
+  otherwise 'String(%s)'
+  on_error 'ArgumentError', act: 'nil'
+  on_error 'TypeError',     act: '""'
+  on_error 'StandardError', act: 'e.message'
+end
+
+# def name=(value)
+#   @name = begin
+#     case value
+#     when nil    then nil
+#     when String then value
+#     else String(value)
+#     end
+#   rescue ArgumentError => e
+#     nil
+#   rescue TypeError => e
+#     ""
+#   rescue StandardError => e
+#     e.message
+#   end
+# end
+```
+
 **0.5.2 (July 18, 2014)**
 * Throw proper exception when type casting function is not defined
 
