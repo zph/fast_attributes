@@ -143,23 +143,53 @@ square.size
 # => [5, 5]
 ```
 
-Method `FastAttributes.set_type_casting` generates the following code:
+Method `FastAttributes.set_type_casting` generates the following template:
 ```ruby
 FastAttributes.set_type_casting String, 'String(%s)'
-# case %s
-# when nil    then nil
-# when String then %s
-# else String(%s)
+# begin
+#   case %s
+#   when nil    then nil
+#   when String then %s
+#   else String(%s)
+#   end
+# rescue => e
+#   raise FastAttributes::TypeCast::InvalidValueError, %(Invalid value "\#{%s}" for attribute "%a" of type "String")
 # end
 ```
+and when the attribute is defined, `fast_attributes` generates the following setter method:
+```ruby
+class A
+  extend FastAttributes
+  attribute :name, String
+end
+
+# def name=(value)
+#   @name = begin
+#     case value
+#     when nil    then nil
+#     when String then value
+#     else String(value)
+#     end
+#   rescue => e
+#     raise FastAttributes::TypeCast::InvalidValueError, %(Invalid value "#{value}" for attribute "name" of type "String")
+#   end
+# end
+```
+Notice, placeholder `%a` represents method name.
 
 If you need to conrol the whole type casting process, you can use the following DSL:
 ```ruby
-FastAttributes.type_cast String do  # case String
-  from 'nil',    to: 'nil'          # when nil    then nil
-  from 'String', to: '%s'           # when String then %s
-  otherwise 'String(%s)'            # else String(%s) 
-end                                 # end
+FastAttributes.type_cast String do     # begin
+                                       #   case String
+  from 'nil',    to: 'nil'             #   when nil    then nil
+  from 'String', to: '%s'              #   when String then %s
+  otherwise 'String(%s)'               #   else String(%s) 
+                                       #   end
+  on_error 'TypeError', act: 'nil'     # rescue TypeError => e
+                                       #   nil
+  on_error 'StandardError', act: '""'  # rescue StandardError => e
+                                       #   ""
+end                                    # end
 ```
 
 ## Extensions
