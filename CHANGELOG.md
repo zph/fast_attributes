@@ -1,4 +1,4 @@
-**0.6.0 (...)**
+**0.6.0 (July 20, 2014)**
 * Throw custom `FastAttributes::TypeCast::InvalidValueError` exception when value has invalid type.
 How auto-generated method looks like:
 ```ruby
