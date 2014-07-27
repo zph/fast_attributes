@@ -192,6 +192,49 @@ FastAttributes.type_cast String do     # begin
 end                                    # end
 ```
 
+## Lenient Data Types
+It's also possible to define a lenient data type which doesn't correspond to any of ruby classes:
+```ruby
+FastAttributes.type_cast :yes_no do
+  from '"yes"', to: 'true'
+  from '"no"',  to: 'false'
+  otherwise 'nil'
+end
+
+class Order
+  extend FastAttributes
+
+  attribute :terms_of_service, :yes_no
+end
+
+order = Order.new
+order.terms_of_service = 'yes'
+order.terms_of_service
+# => true 
+order.terms_of_service = 'no'
+order.terms_of_service
+# => false
+order.terms_of_service = 42
+order.terms_of_service
+# => nil
+```
+
+All default data types have lenient notation:
+```ruby
+class Book
+  extend FastAttributes
+
+  attribute :title,     :string
+  attribute :pages,     :integer
+  attribute :price,     :big_decimal
+  attribute :authors,   :array
+  attribute :published, :date
+  attribute :sold,      :time
+  attribute :finished,  :date_time
+  attribute :rate,      :float
+end
+```
+
 ## Extensions
 * [fast_attributes-uuid](https://github.com/applift/fast_attributes-uuid) - adds support of `UUID` to `fast_attributes`
 
