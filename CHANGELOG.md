@@ -1,3 +1,51 @@
+**0.7.0 (...)**
+* Add support of lenient data types. It allows to define attribute which doesn't correspond to a specific ruby class
+```ruby
+FastAttributes.type_cast :lenient_attribute do
+  from '"yes"', to: 'true'
+  from '"no"',  to: 'false'
+  otherwise 'nil'
+end
+    
+class LenientAttributes
+  extend FastAttributes
+  attribute :terms_of_service, :lenient_attribute
+end
+    
+lenient = LenientAttribute.new
+lenient.terms_of_service = 'yes'
+lenient.terms_of_service # true
+```
+
+* Allow to define default data types using class or symbol.
+```ruby
+class Book
+  extend FastAttributes
+
+  attribute :title      String
+  attribute :pages,     Integer
+  attribute :price,     BigDecimal
+  attribute :authors,   Array
+  attribute :published, Date
+  attribute :sold,      Time
+  attribute :finished,  DateTime
+  attribute :rate,      Float
+end
+
+class LenientBook
+  extend FastAttributes
+
+  attribute :title,     :string
+  attribute :pages,     :integer
+  attribute :price,     :big_decimal
+  attribute :authors,   :array
+  attribute :published, :date
+  attribute :sold,      :time
+  attribute :finished,  :date_time
+  attribute :rate,      :float
+end
+```
+
 **0.6.0 (July 20, 2014)**
 * Throw custom `FastAttributes::TypeCast::InvalidValueError` exception when value has invalid type.
 How auto-generated method looks like:
