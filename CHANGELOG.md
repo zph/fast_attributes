@@ -1,4 +1,16 @@
 **0.7.0 (...)**
+* Support `boolean` data type as a lenient type.
+```ruby
+class Product
+  extend FastAttributes
+  attribute :active, :boolean
+end
+
+product = Product.new
+product.active = 1
+product.active # true
+```
+
 * Add support of lenient data types. It allows to define attribute which doesn't correspond to a specific ruby class
 ```ruby
 FastAttributes.type_cast :lenient_attribute do

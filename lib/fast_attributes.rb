@@ -6,6 +6,9 @@ require 'fast_attributes/builder'
 require 'fast_attributes/type_cast'
 
 module FastAttributes
+  TRUE_VALUES  = {true => nil, 1 => nil, '1' => nil, 't' => nil, 'T' => nil, 'true' => nil, 'TRUE' => nil, 'on' => nil, 'ON' => nil}
+  FALSE_VALUES = {false => nil, 0 => nil, '0' => nil, 'f' => nil, 'F' => nil, 'false' => nil, 'FALSE' => nil, 'off' => nil, 'OFF' => nil}
+
   class << self
     def type_casting
       @type_casting ||= {}
@@ -61,4 +64,18 @@ module FastAttributes
   set_type_casting Time,       'Time.parse(%s)'
   set_type_casting DateTime,   'DateTime.parse(%s)'
   set_type_casting BigDecimal, 'Float(%s);BigDecimal(%s.to_s)'
+
+  type_cast :boolean do
+    otherwise <<-EOS
+      if FastAttributes::TRUE_VALUES.has_key?(%s)
+        true
+      elsif FastAttributes::FALSE_VALUES.has_key?(%s)
+        false
+      elsif %s.nil?
+        nil
+      else
+        raise FastAttributes::TypeCast::InvalidValueError, %(Invalid value "\#{%s}" for attribute "%a" of type ":boolean")
+      end
+    EOS
+  end
 end

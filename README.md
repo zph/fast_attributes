@@ -232,8 +232,10 @@ class Book
   attribute :sold,      :time
   attribute :finished,  :date_time
   attribute :rate,      :float
+  attribute :active,    :boolean
 end
 ```
+Notice, `Boolean` attribute can be defined only via symbol, `fast_attribute` doesn't create `Boolean` class.
 
 ## Extensions
 * [fast_attributes-uuid](https://github.com/applift/fast_attributes-uuid) - adds support of `UUID` to `fast_attributes`

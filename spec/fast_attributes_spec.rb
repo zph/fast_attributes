@@ -244,6 +244,78 @@ describe FastAttributes do
       expect(book.finished).to be(finished)
       expect(book.rate).to be(rate)
     end
+
+    context 'boolean attribute' do
+      let(:object) { DefaultLenientAttributes.new }
+
+      context 'when value is not set' do
+        it 'return nil' do
+          expect(object.active).to be(nil)
+        end
+      end
+
+      context 'when value represents true' do
+        it 'returns true' do
+          object.active = true
+          expect(object.active).to be(true)
+
+          object.active = 1
+          expect(object.active).to be(true)
+
+          object.active = '1'
+          expect(object.active).to be(true)
+
+          object.active = 't'
+          expect(object.active).to be(true)
+
+          object.active = 'T'
+          expect(object.active).to be(true)
+
+          object.active = 'true'
+          expect(object.active).to be(true)
+
+          object.active = 'TRUE'
+          expect(object.active).to be(true)
+
+          object.active = 'on'
+          expect(object.active).to be(true)
+
+          object.active = 'ON'
+          expect(object.active).to be(true)
+        end
+      end
+
+      context 'when value represents false' do
+        it 'returns false' do
+          object.active = false
+          expect(object.active).to be(false)
+
+          object.active = 0
+          expect(object.active).to be(false)
+
+          object.active = '0'
+          expect(object.active).to be(false)
+
+          object.active = 'f'
+          expect(object.active).to be(false)
+
+          object.active = 'F'
+          expect(object.active).to be(false)
+
+          object.active = 'false'
+          expect(object.active).to be(false)
+
+          object.active = 'FALSE'
+          expect(object.active).to be(false)
+
+          object.active = 'off'
+          expect(object.active).to be(false)
+
+          object.active = 'OFF'
+          expect(object.active).to be(false)
+        end
+      end
+    end
   end
 
   describe '#define_attributes' do

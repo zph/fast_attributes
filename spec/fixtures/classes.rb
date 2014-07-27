@@ -111,4 +111,5 @@ class DefaultLenientAttributes
   attribute :sold,      :time
   attribute :finished,  :date_time
   attribute :rate,      :float
+  attribute :active,    :boolean
 end
