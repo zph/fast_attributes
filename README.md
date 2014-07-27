@@ -175,7 +175,7 @@ end
 #   end
 # end
 ```
-Notice, placeholder `%a` represents method name.
+Notice, placeholder `%a` represents method name. Also, `set_type_casting` method generates lenient date type. See [Lenient Data Types](https://github.com/applift/fast_attributes/blob/lenient_data_types/README.md#lenient-data-types) section.
 
 If you need to conrol the whole type casting process, you can use the following DSL:
 ```ruby
