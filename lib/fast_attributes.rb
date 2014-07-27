@@ -16,7 +16,8 @@ module FastAttributes
     end
 
     def set_type_casting(klass, casting)
-      type_cast klass do
+      symbol = klass.name.gsub(/([a-z])([A-Z])/, '\1_\2').downcase.to_sym  # DateTime => :date_time
+      type_cast symbol, klass do
         from 'nil',      to: 'nil'
         from klass.name, to: '%s'
         otherwise casting
@@ -31,10 +32,12 @@ module FastAttributes
       type_casting.has_key?(klass)
     end
 
-    def type_cast(klass, &block)
-      type_cast = TypeCast.new(klass)
-      type_cast.instance_eval(&block)
-      type_casting[klass] = type_cast
+    def type_cast(*types_or_classes, &block)
+      types_or_classes.each do |type_or_class|
+        type_cast = TypeCast.new(type_or_class)
+        type_cast.instance_eval(&block)
+        type_casting[type_or_class] = type_cast
+      end
     end
   end
 

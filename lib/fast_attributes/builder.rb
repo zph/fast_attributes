@@ -12,7 +12,7 @@ module FastAttributes
 
     def attribute(*attributes, type)
       unless FastAttributes.type_exists?(type)
-        raise UnsupportedTypeError, %(Unsupported attribute type "#{type.name}")
+        raise UnsupportedTypeError, %(Unsupported attribute type "#{type.inspect}")
       end
 
       @attributes << [attributes, type]

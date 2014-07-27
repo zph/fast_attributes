@@ -53,9 +53,10 @@ describe FastAttributes do
 
   describe '#attribute' do
     it 'raises an exception when type is not supported' do
-      type  = Class.new(Object) { def self.name; 'CustomType' end }
+      type  = Class.new(Object) { def self.inspect; 'CustomType' end }
       klass = Class.new(Object) { extend FastAttributes }
       expect{klass.attribute(:name, type)}.to raise_error(FastAttributes::UnsupportedTypeError, 'Unsupported attribute type "CustomType"')
+      expect{klass.attribute(:name, :type)}.to raise_error(FastAttributes::UnsupportedTypeError, 'Unsupported attribute type ":type"')
     end
 
     it 'generates getter methods' do
@@ -113,7 +114,7 @@ describe FastAttributes do
       expect(book.title).to eq('123')
       expect(book.name).to eq('456')
       expect(book.pages).to be(250)
-      expect(book.price).to eq(BigDecimal.new("2.55"))
+      expect(book.price).to eq(BigDecimal.new('2.55'))
       expect(book.authors).to eq(%w[Jobs])
       expect(book.published).to eq(Date.new(2014, 6, 21))
       expect(book.sold).to eq(Time.new(2014, 6, 21, 20, 45, 15))
@@ -126,7 +127,7 @@ describe FastAttributes do
       book.title     = title     = 'One'
       book.name      = name      = 'Two'
       book.pages     = pages     = 250
-      book.price     = price     = BigDecimal.new("2.55")
+      book.price     = price     = BigDecimal.new('2.55')
       book.authors   = authors   = %w[Jobs]
       book.published = published = Date.new(2014, 06, 21)
       book.sold      = sold      = Time.new(2014, 6, 21, 20, 45, 15)
@@ -149,7 +150,7 @@ describe FastAttributes do
       book.title     = 'One'
       book.name      = 'Two'
       book.pages     = 250
-      book.price     = BigDecimal.new("2.55")
+      book.price     = BigDecimal.new('2.55')
       book.authors   = %w[Jobs]
       book.published = Date.new(2014, 06, 21)
       book.sold      = Time.new(2014, 6, 21, 20, 45, 15)
@@ -207,6 +208,41 @@ describe FastAttributes do
 
       placeholder.title = 'attribute name 2'
       expect(placeholder.title).to eq('title%a%title%title!')
+    end
+
+    it 'generates lenient attributes which do not correspond to a particular data type' do
+      lenient_attribute = LenientAttributes.new
+      expect(lenient_attribute.terms_of_service).to be(nil)
+
+      lenient_attribute.terms_of_service = 'yes'
+      expect(lenient_attribute.terms_of_service).to be(true)
+
+      lenient_attribute.terms_of_service = 'no'
+      expect(lenient_attribute.terms_of_service).to be(false)
+
+      lenient_attribute.terms_of_service = 42
+      expect(lenient_attribute.terms_of_service).to be(nil)
+    end
+
+    it 'allows to define attributes using symbols as a data type' do
+      book = DefaultLenientAttributes.new
+      book.title     = title     = 'One'
+      book.pages     = pages     = 250
+      book.price     = price     = BigDecimal.new('2.55')
+      book.authors   = authors   = %w[Jobs]
+      book.published = published = Date.new(2014, 06, 21)
+      book.sold      = sold      = Time.new(2014, 6, 21, 20, 45, 15)
+      book.finished  = finished  = DateTime.new(2014, 05, 20, 21, 35, 20)
+      book.rate      = rate      = 4.1
+
+      expect(book.title).to be(title)
+      expect(book.pages).to be(pages)
+      expect(book.price).to eq(price)
+      expect(book.authors).to be(authors)
+      expect(book.published).to be(published)
+      expect(book.sold).to be(sold)
+      expect(book.finished).to be(finished)
+      expect(book.rate).to be(rate)
     end
   end
 

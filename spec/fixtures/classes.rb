@@ -87,3 +87,28 @@ class PlaceholderClass
   attribute :value, Placeholder
   attribute :title, Placeholder
 end
+
+FastAttributes.type_cast :lenient_attribute do
+  from '"yes"', to: 'true'
+  from '"no"',  to: 'false'
+  otherwise 'nil'
+end
+
+class LenientAttributes
+  extend FastAttributes
+
+  attribute :terms_of_service, :lenient_attribute
+end
+
+class DefaultLenientAttributes
+  extend FastAttributes
+
+  attribute :title,     :string
+  attribute :pages,     :integer
+  attribute :price,     :big_decimal
+  attribute :authors,   :array
+  attribute :published, :date
+  attribute :sold,      :time
+  attribute :finished,  :date_time
+  attribute :rate,      :float
+end
