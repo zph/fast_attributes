@@ -1,4 +1,4 @@
-**0.7.0 (...)**
+**0.7.0 (August 31, 2014)**
 * Support `boolean` data type as a lenient type.
 ```ruby
 class Product
