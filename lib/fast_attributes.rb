@@ -42,6 +42,10 @@ module FastAttributes
         type_casting[type_or_class] = type_cast
       end
     end
+
+    def coerce(object, type)
+      Builder.coerce(object, type)
+    end
   end
 
   def define_attributes(options = {}, &block)

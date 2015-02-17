@@ -33,6 +33,15 @@ module FastAttributes
       include_methods
     end
 
+    def self.coerce(value, type)
+        type_cast   = FastAttributes.get_type_casting(type)
+        method_body = type_cast.compile_method_body(value, 'value')
+
+        binding.eval <<-EOS, __FILE__, __LINE__ + 1
+          #{method_body}
+        EOS
+    end
+
     private
 
     def compile_getter
